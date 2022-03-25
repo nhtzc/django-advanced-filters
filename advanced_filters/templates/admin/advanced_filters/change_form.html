@@ -11,7 +11,6 @@
 	<form novalidate {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
 		{% with adminform.form.fields_formset as formset %}
 			<div id="advanced_filters">
-				<h1>{% trans "Change advanced filter" %}:</h1>
 					{% csrf_token %}
 					{{ formset.management_form }}
 					<!-- Fieldsets -->
@@ -31,7 +30,9 @@
 						</thead>
 						<tbody>
 							{% for form in formset %}
-								<tr class="form-row {% cycle "row1" "row2" %} {% if forloop.last %}empty-form{% endif %}" id="{{ formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+								<tr class="form-row {% cycle "row1" "row2" %} {% if not forloop.first and forloop.last %}empty-form{% endif %}" id="{{ formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}"-->
+								<!-- if more than 1 filter elements already exists, last one is not displayed on change page. Gets displayed if we click on Add another filter
+								     this is very unstable -->
 									{% for field in form.visible_fields %}
 										<td{% if field.field.name %} class="field-{{ field.field.name }}"{% endif %}>
 											{{ field }}
